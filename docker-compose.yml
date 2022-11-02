@@ -1,0 +1,43 @@
+version: '3.0'
+
+services:
+
+  db:
+    image: postgres
+    volumes:
+      - data_base:/var/lib/postgresql/data
+    ports:
+    - "5432:5432"
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    
+
+  django:
+    container_name: django_core
+    build: .
+    command: >
+      sh -c "python manage.py makemigrations && 
+      python manage.py migrate && python manage.py runserver 0.0.0.0:9000"
+    tty: true
+    stdin_open: true
+    volumes:
+      - .:/code
+    ports:
+      - "9000:9000"
+    depends_on:
+      - db
+
+  adminer:
+    container_name: adminer_ocr_api
+    image: adminer
+    depends_on:
+      - db
+    restart: unless-stopped
+    ports:
+      - 8080:8080
+
+
+volumes:
+  data_base:
