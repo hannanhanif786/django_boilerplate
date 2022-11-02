@@ -1,0 +1,7 @@
+Django 
+psycopg2
+python-decouple
+Pillow
+coverage
+sphinx
+sphinx_rtd_theme
